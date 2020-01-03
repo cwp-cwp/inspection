@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puzek.platform.inspection.dao.ResultImageMapper">
+    <resultMap id="resultImages" type="com.puzek.platform.inspection.entity.ResultImage">
+        <result property="id" column="id"/>
+        <result property="parkingId" column="parking_id"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="imageName" column="image_name"/>
+        <result property="imageType" column="image_type"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.puzek.platform.inspection.entity.ResultImage">
+        INSERT INTO result_image (id, parking_id, batch_number, image_name, image_type)
+        VALUES (#{id}, #{parkingId}, #{batchNumber}, #{imageName}, #{imageType})
+    </insert>
+</mapper>

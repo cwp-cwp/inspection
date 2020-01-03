@@ -1,0 +1,128 @@
+create database webdb;
+
+CREATE TABLE `webdb`.`car` (
+  `id`             bigint(30) NOT NULL,
+  `license`        varchar(255) DEFAULT NULL
+  COMMENT '车牌',
+  `area`           int(10)      DEFAULT 0
+  COMMENT '区域id',
+  `login_time`     varchar(30)  DEFAULT NULL
+  COMMENT '登录时间',
+  `login_position` varchar(255) DEFAULT NULL
+  COMMENT '登录地址',
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;
+
+
+CREATE TABLE `webdb`.`area` (
+  `id`        bigint(30) NOT NULL,
+  `area_name` varchar(255) DEFAULT NULL
+  COMMENT '区域名称',
+  `operation` varchar(255) DEFAULT NULL
+  COMMENT '运营商',
+  `push_url`  varchar(255) DEFAULT NULL
+  COMMENT '推送地址',
+  `origin`    varchar(255) DEFAULT NULL
+  COMMENT '经纬度',
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;
+
+
+CREATE TABLE `webdb`.`parking` (
+  `id`             bigint(30) NOT NULL,
+  `area`           int(10)      DEFAULT 0
+  COMMENT '区域id',
+  `parking_number` varchar(25)  DEFAULT NULL
+  COMMENT '车位号',
+  `x1`             varchar(25)  DEFAULT NULL
+  COMMENT 'x坐标',
+  `y1`             varchar(25)  DEFAULT NULL
+  COMMENT 'y坐标',
+  `x2`             varchar(25)  DEFAULT NULL
+  COMMENT 'x坐标',
+  `y2`             varchar(25)  DEFAULT NULL
+  COMMENT 'y坐标',
+  `x3`             varchar(25)  DEFAULT NULL
+  COMMENT 'x坐标',
+  `y3`             varchar(25)  DEFAULT NULL
+  COMMENT 'y坐标',
+  `x4`             varchar(25)  DEFAULT NULL
+  COMMENT 'x坐标',
+  `y4`             varchar(25)  DEFAULT NULL
+  COMMENT 'y坐标',
+  `status`         varchar(25)  DEFAULT NULL
+  COMMENT '车位状态',
+  `operate_time`   varchar(30)  DEFAULT NULL
+  COMMENT '车位操作过时间',
+  `street_name`    varchar(255) DEFAULT NULL
+  COMMENT '街道名称',
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;
+
+
+CREATE TABLE `webdb`.`result` (
+  `id`               bigint(30) NOT NULL,
+  `car`              int(10)      DEFAULT 0
+  COMMENT ' ',
+  `parking_id`       int(10)      DEFAULT 0
+  COMMENT ' ',
+  `result_type`      varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `batch_number`     varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `car_number`       varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `final_car_number` varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `push_status`      varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `push_time`        varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `scan_time`        varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;
+
+
+CREATE TABLE `webdb`.`result_image` (
+  `id`           bigint(30) NOT NULL,
+  `parking_id`   int(10)      DEFAULT 0
+  COMMENT ' ',
+  `batch_number` varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `image_name`   varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  `image_type`   varchar(255) DEFAULT NULL
+  COMMENT ' ',
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;
+
+
+CREATE TABLE `webdb`.`persistent_logins` (
+  `username`  varchar(64)  NOT null,
+  `series`    varchar(255) NOT null
+  COMMENT ' ',
+  `token`     varchar(255) NOT NULL
+  COMMENT ' ',
+  `last_used` timestamp    NOT NULL
+  COMMENT ' ',
+  PRIMARY KEY (`series`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+;

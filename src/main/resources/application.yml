@@ -1,0 +1,19 @@
+server:
+  port: 38080
+spring:
+  datasource:
+#    name: inspection
+    url: jdbc:mysql://127.0.0.1:8066/TESTDB?characterEncoding=UTF-8
+    username: mycat
+    password: mycat
+    driver-class-name: com.mysql.jdbc.Driver
+  jmx:
+    enabled: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml, com.cwp.cloud.mapper.*.xml
+  type-aliases-package: com.puzek.platform.inspection.dao
+logging:
+  level:
+    com.puzek.platform.inspection.dao: DEBUG
+customize:
+  whitelist2: /parking/**,/area/**,/car/**,/puzekTest/**

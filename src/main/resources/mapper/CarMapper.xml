@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puzek.platform.inspection.dao.CarMapper">
+    <resultMap id="baseResultMap" type="com.puzek.platform.inspection.entity.Car">
+        <result property="id" column="id"/>
+        <result property="license" column="license"/>
+        <result property="area" column="area"/>
+        <result property="loginTime" column="login_time"/>
+        <result property="loginPosition" column="login_position"/>
+        <result property="areaName" column="area_name"/>
+        <result property="operation" column="operation"/>
+        <result property="pushUrl" column="push_url"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO car (id, license, area)
+        VALUES (#{id}, #{license}, #{area})
+    </insert>
+
+    <select id="getCarList" resultMap="baseResultMap">
+        SELECT
+        c.id, c.license, c.area, c.login_time, c.login_position, a.area_name, a.operation, a.push_url
+        FROM car AS c INNER JOIN area AS a ON c.area = a.id
+        <where>
+            <if test="license != null and license.trim() != ''">
+                AND c.license = #{license}
+            </if>
+            <if test="area != null">
+                AND a.id = #{area}
+            </if>
+        </where>
+        ORDER BY c.id ASC
+    </select>
+
+    <select id="getCarListByArea" resultMap="baseResultMap">
+        SELECT
+        c.id, c.license, c.area, c.login_time, c.login_position, a.area_name, a.operation, a.push_url
+        FROM car AS c INNER JOIN area AS a ON c.area = a.id
+        <where>
+            <if test="area != null">
+                AND a.id = #{area}
+            </if>
+        </where>
+        ORDER BY c.id ASC
+    </select>
+
+    <select id="getCarByLicense" resultMap="baseResultMap">
+        SELECT
+            c.id, c.license, c.area, c.login_time, c.login_position, a.area_name, a.operation, a.push_url
+        FROM car AS c INNER JOIN area AS a ON c.area = a.id
+        WHERE c.license = #{license}
+        ORDER BY c.id ASC
+    </select>
+
+    <update id="modifyCar" parameterType="com.puzek.platform.inspection.entity.Car">
+        <if test="id != null">
+            UPDATE car
+            <set>
+                <if test="license != null and license.trim() != ''">
+                    license = #{license},
+                </if>
+                <if test="area != null">
+                    area = #{area},
+                </if>
+            </set>
+            WHERE id = #{id}
+        </if>
+    </update>
+
+    <update id="updateCarLoginTimeAndPosition">
+        <if test="id != null">
+            UPDATE car
+            <set>
+                <if test="loginTime != null and loginTime.trim() != ''">
+                    login_time = #{loginTime},
+                </if>
+                <if test="position != null and position.trim() != ''">
+                    login_position = #{position},
+                </if>
+            </set>
+            WHERE id = #{id}
+        </if>
+    </update>
+</mapper>

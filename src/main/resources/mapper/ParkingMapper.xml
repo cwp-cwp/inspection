@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puzek.platform.inspection.dao.ParkingMapper">
+    <resultMap id="baseResultMap" type="com.puzek.platform.inspection.entity.Parking">
+        <result property="id" column="id"/>
+        <result property="area" column="area"/>
+        <result property="parkingNumber" column="parking_number"/>
+        <result property="x1" column="x1"/>
+        <result property="x2" column="x2"/>
+        <result property="x3" column="x3"/>
+        <result property="x4" column="x4"/>
+        <result property="y1" column="y1"/>
+        <result property="y2" column="y2"/>
+        <result property="y3" column="y3"/>
+        <result property="y4" column="y4"/>
+        <result property="status" column="status"/>
+        <result property="operateTime" column="operate_time"/>
+        <result property="streetName" column="street_name"/>
+        <result property="areaName" column="area_name"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.puzek.platform.inspection.entity.Parking">
+        INSERT INTO parking (id, area, parking_number, x1, y1, x2, y2, x3, y3, x4, y4, status, operate_time, street_name)
+        VALUES (#{id}, #{area}, #{parkingNumber}, #{x1}, #{y1}, #{x2}, #{y2}, #{x3}, #{y3}, #{x4}, #{y4}, #{status}, #{operateTime}, #{streetName})
+    </insert>
+
+    <insert id="insert2" parameterType="com.puzek.platform.inspection.entity.Parking">
+        INSERT INTO parking (id, area, parking_number, x1, y1, x2, y2, x3, y3, x4, y4, status, operate_time, street_name)
+        VALUES (#{id}, #{area}, #{parkingNumber}, #{x1}, #{y1}, #{x2}, #{y2}, #{x3}, #{y3}, #{x4}, #{y4}, #{status}, #{operateTime}, #{streetName})
+    </insert>
+
+    <select id="getParkingList" resultMap="baseResultMap">
+        SELECT
+        p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time,
+        p.street_name,
+        a.area_name
+        FROM parking AS p INNER JOIN area AS a ON p.area = a.id
+        <where>
+            <if test="parkingNumber != null and parkingNumber.trim() != ''">
+                AND p.parking_number = #{parkingNumber}
+            </if>
+            <if test="area != null">
+                AND p.area = #{area}
+            </if>
+            AND p.status &lt;&gt; 'del'
+        </where>
+        ORDER BY p.id ASC
+    </select>
+
+    <!--<select id="getChangeParking" resultMap="baseResultMap">-->
+        <!--SELECT-->
+        <!--p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time, p.street_name,-->
+        <!--a.area_name-->
+        <!--FROM parking AS p INNER JOIN area AS a ON p.area = a.id-->
+        <!--WHERE p.area = #{area} AND to_date(p.operate_time, 'yyyy-MM-dd hh24:mi:ss') BETWEEN to_date(#{lastTime}, 'yyyy-MM-dd hh24:mi:ss') AND to_date(#{currentTime}, 'yyyy-MM-dd hh24:mi:ss')-->
+        <!--ORDER BY p.id ASC-->
+    <!--</select>-->
+
+    <select id="getChangeParking" resultMap="baseResultMap">
+        SELECT
+        p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time, p.street_name,
+        a.area_name
+        FROM parking AS p INNER JOIN area AS a ON p.area = a.id
+        WHERE p.area = #{area} AND p.operate_time BETWEEN #{lastTime} AND #{currentTime}
+        ORDER BY p.id ASC
+    </select>
+
+    <select id="getAllParkingList" resultMap="baseResultMap">
+        SELECT
+        p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time, p.street_name,
+        a.area_name
+        FROM parking AS p INNER JOIN area AS a ON p.area = a.id
+        WHERE p.status &lt;&gt; 'del'
+        ORDER BY p.id ASC
+    </select>
+
+
+    <select id="getParkingList3" resultMap="baseResultMap">
+        SELECT
+        p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time,
+        p.street_name,
+        a.area_name
+        FROM parking AS p INNER JOIN area AS a ON p.area = a.id
+        <where>
+            <if test="parkingNumber != null and parkingNumber.trim() != ''">
+                AND p.parking_number = #{parkingNumber}
+            </if>
+            <if test="area != null">
+                AND p.area = #{area}
+            </if>
+            <if test="street != null and street.trim() != ''">
+                AND p.street_name = #{street}
+            </if>
+            <if test="startTime != null and startTime.trim() != '' and endTime != null and endTime.trim() != ''">
+                AND p.operate_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            AND p.status &lt;&gt; 'del'
+        </where>
+        ORDER BY p.id ASC
+    </select>
+
+    <select id="getParkingByParkingNumberAndArea" resultMap="baseResultMap">
+        SELECT p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time, p.street_name, a.area_name FROM parking AS p
+        INNER JOIN area AS a ON p.area = a.id
+        WHERE p.parking_number = #{parkingNumber} AND p.area = #{area} AND p.status &lt;&gt; 'del'
+        ORDER BY p.id ASC
+    </select>
+
+    <select id="getParkingById" resultMap="baseResultMap">
+        SELECT p.id, p.area, p.parking_number, p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4, p.status, p.operate_time, p.street_name, a.area_name FROM parking AS p
+        INNER JOIN area AS a ON p.area = a.id
+        WHERE p.id = #{id}
+        ORDER BY p.id ASC
+    </select>
+
+    <update id="modifyParking">
+        <if test="id != null">
+            UPDATE parking
+            <set>
+                <if test="parkingNumber != null and parkingNumber.trim() != ''">
+                    parking_number = #{parkingNumber},
+                </if>
+                <if test="area != null">
+                    area = #{area}
+                </if>
+            </set>
+            WHERE id = #{id}
+        </if>
+    </update>
+
+    <update id="modifyParkingByParams">
+        <if test="id != null">
+            UPDATE parking
+            <set>
+                <if test="x1 != null and x1.trim() != ''">
+                    x1 = #{x1},
+                </if>
+                <if test="y1 != null and y1.trim() != ''">
+                    y1 = #{y1},
+                </if>
+                <if test="x2 != null and x2.trim() != ''">
+                    x2 = #{x2},
+                </if>
+                <if test="y2 != null and y2.trim() != ''">
+                    y2 = #{y2},
+                </if>
+                <if test="x3 != null and x3.trim() != ''">
+                    x3 = #{x3},
+                </if>
+                <if test="y3 != null and y3.trim() != ''">
+                    y3 = #{y3},
+                </if>
+                <if test="x4 != null and x4.trim() != ''">
+                    x4 = #{x4},
+                </if>
+                <if test="y4 != null and y4.trim() != ''">
+                    y4 = #{y4},
+                </if>
+                <if test="status != null and status.trim() != ''">
+                    status = #{status},
+                </if>
+                <if test="operateTime != null and operateTime.trim() != ''">
+                    operate_time = #{operateTime},
+                </if>
+                <if test="parkingNumber != null and parkingNumber.trim() != ''">
+                    parking_number = #{parkingNumber},
+                </if>
+                <if test="area != null">
+                    area = #{area}
+                </if>
+                <if test="streetName != null and streetName.trim() != ''">
+                    street_name = #{streetName},
+                </if>
+            </set>
+            WHERE id = #{id}
+        </if>
+    </update>
+</mapper>

@@ -1,0 +1,39 @@
+create schema inspection;
+create table inspection.car(
+    id serial primary key, -- 自增id
+    license text, -- 车牌
+    area int, -- 区域id
+    login_time text, -- 登录时间
+    login_position text -- 登录地址
+);
+
+create table inspection.area(
+    id serial primary key, -- 自增id
+    area_name text, -- 区域名称
+    operation text, -- 运营商
+    push_url text, -- 推送地址
+    origin text -- 经纬度
+);
+
+create table inspection.parking(
+    id serial primary key, -- 自增id
+    area int, -- 区域id
+    parking_number text, -- 车位号
+    x1 text,
+    y1 text,
+    x2 text,
+    y2 text,
+    x3 text,
+    y3 text,
+    x4 text,
+    y4 text,
+    status text, -- 车位状态
+    operate_time text, -- 车位操作过时间
+    street_name text -- 街道名称
+);
+
+create table inspection.result(id serial primary key, car int, parking_id int, result_type text, batch_number text, car_number text, final_car_number text, push_status text, push_time text, scan_time text);
+
+create table inspection.result_image(id serial primary key, parking_id int, batch_number text, image_name text, image_type text);
+
+create table persistent_logins (username varchar(64) not null, series varchar(64) primary key, token varchar(64) not null, last_used timestamp not null);

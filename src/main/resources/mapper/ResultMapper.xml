@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puzek.platform.inspection.dao.ResultMapper">
+    <resultMap id="resultImages" type="com.puzek.platform.inspection.entity.ResultImage">
+        <result property="id" column="imageId"/>
+        <result property="parkingId" column="parking_id"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="imageName" column="image_name"/>
+        <result property="imageType" column="image_type"/>
+    </resultMap>
+
+    <resultMap id="baseResultMap" type="com.puzek.platform.inspection.entity.Result">
+        <result property="id" column="id"/>
+        <result property="car" column="car"/>
+        <result property="resultType" column="result_type"/>
+        <result property="parkingId" column="parking_id"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="carNumber" column="car_number"/>
+        <result property="finalCarNumber" column="final_car_number"/>
+        <result property="pushStatus" column="push_status"/>
+        <result property="scanTime" column="scan_time"/>
+        <result property="pushTime" column="push_time"/>
+        <result property="areaName" column="area_name"/>
+        <result property="parkingNumber" column="parking_number"/>
+        <collection property="resultImages" resultMap="resultImages"/>
+    </resultMap>
+
+    <select id="getResultList" resultMap="baseResultMap">
+        SELECT
+            r.id, r.car, r.result_type, r.parking_id, r.batch_number, r.car_number, r.final_car_number, r.scan_time,
+            r.push_status, r.push_time, p.parking_number, a.area_name, ri.id imageId, ri.parking_id, ri.batch_number, ri.image_name, ri.image_type
+        FROM ((result AS r INNER JOIN parking AS p ON r.parking_id = p.id)
+                INNER JOIN area AS a ON p.area = a.id) INNER JOIN result_image AS ri
+                ON r.parking_id = ri.parking_id AND r.batch_number = ri.batch_number
+        <where>
+            <if test="batchNumber != null and batchNumber.trim() != ''">
+                AND r.batch_number = #{batchNumber}
+            </if>
+            <if test="parkingNumber != null and parkingNumber.trim() != ''">
+                AND r.parking_number = #{parkingNumber}
+            </if>
+            <if test="resultType != null and resultType.trim() != ''">
+                AND r.result_type = #{resultType}
+            </if>
+            <if test="carNumber != null and carNumber.trim() != ''">
+                AND r.car_number = #{carNumber}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.puzek.platform.inspection.entity.Parking">
+        INSERT INTO result (id, car, batch_number, parking_id, result_type, car_number, final_car_number, push_status, push_time, scan_time)
+        VALUES (#{id}, #{car}, #{batchNumber}, #{parkingId}, #{resultType}, #{carNumber}, #{finalCarNumber}, #{pushStatus}, #{pushTime}, #{scanTime})
+    </insert>
+</mapper>

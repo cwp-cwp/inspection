@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puzek.platform.inspection.dao.AreaMapper">
+    <resultMap id="baseResultMap" type="com.puzek.platform.inspection.entity.Area">
+        <result property="id" column="id"/>
+        <result property="areaName" column="area_name"/>
+        <result property="operation" column="operation"/>
+        <result property="pushUrl" column="push_url"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO area (id, area_name, operation, push_url)
+        VALUES (#{id}, #{name}, #{operation}, #{pushUrl})
+    </insert>
+
+    <select id="getAreaList" resultMap="baseResultMap">
+        SELECT
+            a.id, a.area_name, a.operation, a.push_url
+         FROM area AS a
+         <where>
+             <if test="name != null and name.trim() != ''">
+                 a.area_name = #{name}
+             </if>
+             <if test="operation != null and operation.trim() != ''">
+                 a.operation = #{operation}
+             </if>
+         </where>
+         ORDER BY a.id ASC
+    </select>
+
+    <select id="getAllAreaList" resultMap="baseResultMap">
+        SELECT
+            a.id, a.area_name, a.operation, a.push_url
+         FROM area AS a
+         ORDER BY a.id ASC
+    </select>
+
+    <select id="getAreaByName" resultMap="baseResultMap">
+        SELECT
+            a.id, a.area_name, a.operation, a.push_url
+        FROM area AS a
+        WHERE a.area_name = #{name}
+        ORDER BY a.id ASC
+    </select>
+
+    <update id="modifyArea" parameterType="com.puzek.platform.inspection.entity.Area">
+        <if test="id != null">
+            UPDATE area
+            <set>
+                <if test="areaName != null and areaName.trim() != ''">
+                    area_name = #{areaName},
+                </if>
+                <if test="operation != null and operation.trim() != ''">
+                    operation = #{operation},
+                </if>
+                <if test="pushUrl != null and pushUrl.trim() != ''">
+                    push_url = #{pushUrl},
+                </if>
+            </set>
+            WHERE id = #{id}
+        </if>
+    </update>
+</mapper>
